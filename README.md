@@ -15,7 +15,6 @@ Creating the fundementals
 9. test model vs solver on testing data
 10. check results
 
-<br>
 ### Side porjects
 
 1. create Gui for users to use models themselves
