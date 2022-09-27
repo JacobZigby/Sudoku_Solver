@@ -16,7 +16,7 @@ Creating the fundementals
 10. check results
 
 <br>
-#### Side porjects
+### Side porjects
 
 1. create Gui for users to use models themselves
 2. allow users to play any sudoku they find my taking a picture with thier mobile device and having it transfered
