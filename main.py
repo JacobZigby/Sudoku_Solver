@@ -18,6 +18,9 @@ def main():
     #option 4: fill in all rows and then shuffle to a solution
     #option 5: do one number type at a time
 
+    print(gen1())
+
+def gen1():
     #create a set that contains all possible values in a row, col or 3X3 space
     values = {1,2,3,4,5,6,7,8,9}
 
@@ -101,7 +104,7 @@ def main():
                 # else:
                 #print(grid)
                 if not available_values:
-                    print("list empty")
+                    #print("list empty")
                     is_scrape = True
                     break
 
@@ -112,11 +115,9 @@ def main():
                 break
 
         #put back one tap to just see the final result
-        print(grid)
-    
-    #option 5 use matrixs
+        #print(grid)
 
-    #option 6 the shuffler
+    return grid
 
 
 
