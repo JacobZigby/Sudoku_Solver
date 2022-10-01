@@ -4,6 +4,7 @@
 
 # Imports here
 from ast import While
+from re import template
 import numpy as np
 import random
 
@@ -12,13 +13,15 @@ import random
 def main():
     print("main code started")
         
-    #option 1: fill up a grid trying to only look at the possibilites and when failed try again from scratch
+    #option 1: fill up a grid trying to only look at the possibilites and when failed try again from scratch (done)
     #option 2: fill up grid but with the ability to backtrack
     #option 3: fill in the diagonal squares first and fill in the rest after
     #option 4: fill in all rows and then shuffle to a solution
     #option 5: do one number type at a time
 
-    print(gen1())
+    print(gen4())
+
+#for the methods these are temporary names
 
 def gen1():
     #create a set that contains all possible values in a row, col or 3X3 space
@@ -119,7 +122,25 @@ def gen1():
 
     return grid
 
+def gen4():
+    #generate 9 X 9 gride with rows to shuffle
+    #cool tool, but not neccesary for what I have in mind
+    #grid = np.tile([1,2,3,4,5,6,7,8,9], (9,1))
 
+    VALUES = (1,2,3,4,5,6,7,8,9)
+
+    #generate a base board and shuffle all rows at least once
+    grid = np.array([random.sample(VALUES, 9) for i in range(len(VALUES))])
+
+    #step one check if the first column is equal to 45
+    #step two check for duplicate values and missing values
+    #step three replace a duplicate for a missing (on the same row)
+    #repeat until all columns are searched through 
+
+    for col in range(len(grid)):
+        print(col)
+
+    return grid
 
 #Test to see what __name__ is
 print(__name__)
