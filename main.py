@@ -138,7 +138,15 @@ def gen4():
     #repeat until all columns are searched through 
 
     for col in range(len(grid)):
-        print(col)
+        #create an array to hold the count of all numbers
+        n_count = np.bincount(grid[:,col], minlength=10)
+
+        #temp visual display:
+        for i in range(1, len(n_count)):
+            print(n_count[i], end=" ")
+
+        print()
+
 
     return grid
 
@@ -146,5 +154,6 @@ def gen4():
 print(__name__)
 
 if __name__ == "__main__":
+
     main()
     print("Code succesfully exucuted")
