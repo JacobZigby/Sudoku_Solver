@@ -137,7 +137,7 @@ def gen4():
     #step three replace a duplicate for a missing (on the same row)
     #repeat until all columns are searched through 
 
-    for col in range(len(grid)):
+    for col in range(len(grid)): 
         #create an array to hold the count of all numbers
         n_count = np.bincount(grid[:,col], minlength=10)
         #to keep in mind about n_count: 1) index zero counts for all instances of the number zero
@@ -178,9 +178,27 @@ def gen4():
                             #leave the for loop as replacment has been completed
                             break
         print(n_count)
+        #call recursive backtracking function here to solve the last duplication values
 
     return grid
 
+def authenticator(grid):
+    #the grid should be a 2d array with the shape of 9 by 9
+
+    #step 1 check what type of object grid is and turn into numpy array if need be
+    #step 2 check each column and row and make sure all values are unique from 1-9
+    #step 3 check each quad and make sure each value are unique from 1-9
+
+    #we're currently just wanting to solve something right now so here's the quick and dirty verion
+    for i in range(len(grid)):
+        row = np.bincount(grid[i], minlength=10)
+        col = np.bincount(grid[:,i],minlength=10)
+
+        if(set(row[1:]) != {1} or set(col[1:]) != {1} ):
+            return False
+        #quad section here
+
+    return True
 #Test to see what __name__ is
 print(__name__)
 
