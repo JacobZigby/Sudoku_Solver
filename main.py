@@ -141,11 +141,22 @@ def gen4():
         #create an array to hold the count of all numbers
         n_count = np.bincount(grid[:,col], minlength=10)
         available_values = [x for x in range(1,10) if n_count[x] == 0]
+        
         #create a shuffler for the availale_values that checks if there exists a value, if no values then skip this itteration
+        if(len(available_values)>0):
+            random.shuffle(available_values)
+        else:
+            print("This itteration has been skipped: Due to no missing value in column")
+            continue
 
         for row in range(len(grid)):
+            #check for when the value shows up more than once
             if(n_count[grid[row,col]] > 1):
-                print(row+1)
+                #search for the replacment value
+                #could do this in one line, but it would look messy
+                bool_con = [value in grid[row,col:] for value in available_values]
+                if True in bool_con:
+                    print("Value found in row")
         
         break
 
@@ -156,6 +167,5 @@ def gen4():
 print(__name__)
 
 if __name__ == "__main__":
-
     main()
     print("Code succesfully exucuted")
