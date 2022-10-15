@@ -140,12 +140,14 @@ def gen4():
     for col in range(len(grid)):
         #create an array to hold the count of all numbers
         n_count = np.bincount(grid[:,col], minlength=10)
+        available_values = [x for x in range(1,10) if n_count[x] == 0]
+        #create a shuffler for the availale_values that checks if there exists a value, if no values then skip this itteration
 
-        #temp visual display:
-        for i in range(1, len(n_count)):
-            print(n_count[i], end=" ")
-
-        print()
+        for row in range(len(grid)):
+            if(n_count[grid[row,col]] > 1):
+                print(row+1)
+        
+        break
 
 
     return grid
