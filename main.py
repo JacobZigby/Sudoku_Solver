@@ -140,8 +140,9 @@ def gen4():
     for col in range(len(grid)):
         #create an array to hold the count of all numbers
         n_count = np.bincount(grid[:,col], minlength=10)
+        #to keep in mind about n_count: 1) index zero counts for all instances of the number zero
+        #example, when index is equal to 1, whatever the output is, that's how many 1's exist in that column
         available_values = [x for x in range(1,10) if n_count[x] == 0]
-        
         #create a shuffler for the availale_values that checks if there exists a value, if no values then skip this itteration
         if(len(available_values)>0):
             random.shuffle(available_values)
@@ -155,11 +156,28 @@ def gen4():
                 #search for the replacment value
                 #could do this in one line, but it would look messy
                 bool_con = [value in grid[row,col:] for value in available_values]
+                #if a value exists in the row, search for it's location and do the swap
                 if True in bool_con:
-                    print("Value found in row")
-        
-        break
+                    #traverse the row starting from the current column
+                    for s_col in range(col, len(grid)):
+                        if grid[row, s_col] in available_values:
+                            #remove the value from available_values
+                            available_values.remove(grid[row, s_col])
 
+                            #do the value's reassignments to other neccesary variables
+                            #here we remove one as the current column is lossing this value
+                            n_count[grid[row,col]] -= 1
+                            #here we add one as the current column is gaining this value
+                            n_count[grid[row,s_col]] += 1
+
+                            #replacement down here
+                            tmp = grid[row,col]
+                            grid[row,col] = grid[row, s_col]
+                            grid[row, s_col] = tmp
+
+                            #leave the for loop as replacment has been completed
+                            break
+        print(n_count)
 
     return grid
 
