@@ -20,3 +20,4 @@ Creating the fundementals
 1. create Gui for users to use models themselves
 2. allow users to play any sudoku they find my taking a picture with thier mobile device and having it transfered
 3. implement a hint method
+4. Create a difficulty predictor
