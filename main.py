@@ -184,24 +184,63 @@ def gen4():
 
 def authenticator(grid):
     #the grid should be a 2d array with the shape of 9 by 9
+    #potential update (make it so sudukos with missing values in boxes can still be accepted)
 
     #step 1 check what type of object grid is and turn into numpy array if need be
     #step 2 check each column and row and make sure all values are unique from 1-9
     #step 3 check each quad and make sure each value are unique from 1-9
 
+    #offsets to be used to determin which quad to check at the specified time
+    quad_col_offset = 0
+    quad_row_offset = 0
     #we're currently just wanting to solve something right now so here's the quick and dirty verion
     for i in range(len(grid)):
         row = np.bincount(grid[i], minlength=10)
         col = np.bincount(grid[:,i],minlength=10)
 
+
+        #checks to see that only one of each possibility exists at a time
         if(set(row[1:]) != {1} or set(col[1:]) != {1} ):
+            #returns a false testing is the test passes
+            return False
+
+        #checking quads
+        if(i != 0 and i % 3 == 0):
+            quad_col_offset = 0
+            quad_row_offset += 1
+
+        quad_set = set(
+            np.bincount(
+                grid[
+                    quad_row_offset * 3 : (quad_row_offset + 1) * 3,
+                    quad_col_offset * 3 : (quad_col_offset + 1) * 3
+                ].flatten(),
+                minlength=10
+            )
+        )
+
+        if(quad_set != {1}):
             return False
         #quad section here
+        #add the extra value for the next itteration
+        quad_col_offset += 1
 
     return True
 #Test to see what __name__ is
 print(__name__)
 
 if __name__ == "__main__":
-    main()
+    tmp_grid = np.array(
+        [[3, 2, 7, 6, 5, 8, 1, 4, 9],
+        [9, 1, 3, 4, 6, 7, 8, 2, 5],
+        [5, 8, 6, 3, 7, 1, 2, 9, 4],
+        [8, 6, 5, 2, 1, 4, 9, 7, 3],
+        [7, 4, 9, 5, 8, 2, 3, 1, 6],
+        [4, 5, 2, 9, 3, 6, 7, 8, 1],
+        [1, 9, 8, 7, 4, 3, 6, 5, 2],
+        [2, 3, 1, 8, 9, 5, 4, 6, 7],
+        [6, 7, 4, 1, 2, 9, 5, 3, 8]]
+    )
+    print(authenticator(tmp_grid))
+    #main()
     print("Code succesfully exucuted")
