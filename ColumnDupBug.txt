@@ -102,3 +102,52 @@ new col: 8
 Step 5: Check if quad1 still has any dups, if so redo steps 1-4 for quad1 if not move onto quad2 and redo steps 1-4 (skip quads 3 and 6)
 
 Repetition here:
+
+Step 1: check quad one for dups: none
+
+Step 1: check quad two for dups and locate all dups and missing:
+dups: 6,7
+missing: 2,9
+
+Step 2: Identify offset values
+1: 4,3
+2: 5 (can't be used since it contains two dups already)
+3: 8,1 
+
+step 3: Identify offset combinations
+looking for: (2,4,3), (9,4,3), (8,2,1), (8,9,1)
+
+found combination (1,8,2) in column 6, quad 3 (also found in quad1 but I'd like to see if we can find all solutions in last quads)
+location: (0,6):(2,6)
+
+Step 4: replace old col that matches combination minus 1 with new col
+old col: 5
+new col: 6
+
+[[9 2 7 6 5 1 8 4 3]
+ [5 1 3 4 6 8 7 2 9]
+ [4 8 6 3 7 2 1 9 5]
+ [3 6 5 2 1 9 4 7 8]
+ [6 4 9 5 8 3 2 1 7]
+ [1 5 2 9 3 7 6 8 4]
+ [2 9 8 7 4 6 3 5 1]
+ [7 3 1 8 9 4 5 6 2]
+ [8 7 4 1 2 5 9 3 6]]
+
+repeat:
+Step 1: check for dups in quad 2:
+dup: 6, missing: 9
+
+Step 2: identify offset values:
+1: 4,3
+2: 5,7
+
+Step 3: identify combinations:
+(9,4,3), (9,5,7)
+
+None found: possible suggestions to solve issue:
+1) go back an iteration and replace the double dup line with the other double dup line
+2) go back and start with quads 1, 4, 7
+3) continue, but extend the combinations to require a combination of both offset possibilites
+
+For now lets take a break and implement the first part where we remove dups from the columns
