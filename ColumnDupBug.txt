@@ -62,3 +62,43 @@ location new (8,7)
 
 ... hmmm, I'll be back, I'm going to go create a solution authenticator method, as I don't want to do that mentally
 
+SO it works, next thing for one of the original proplems lets switch coulmn 1 with column 5
+
+for this testing lets just make a simplified quad authenticator
+
+Simple authenticator returns positive results for columns and rows containing uniques but fails on quads
+
+Next step programme the solution for columns and create a solution for the quads	
+
+
+STEP 1: identify quad1s duplicats and missing values
+dup: 3, missing: 4
+
+STEP 2: identify the offset values on the dup columns
+offset combinations
+1: 9,5
+2: 7,6
+
+Step 3: search other two grids for valid combination of values such as it contains missing + offset values
+looking for: (4,9,5) or (4,7,6)
+
+Found combination (4,9,5) on column 8 (last column) in quad 3 (top right)
+location (0,8):(2,8)
+
+step 4 replace old column with dup and matching offset with new column with missing and matching offset
+old col: 0
+new col: 8
+
+[[9 2 7 6 5 8 1 4 3]
+ [5 1 3 4 6 7 8 2 9]
+ [4 8 6 3 7 1 2 9 5]
+ [3 6 5 2 1 4 9 7 8]
+ [6 4 9 5 8 2 3 1 7]
+ [1 5 2 9 3 6 7 8 4]
+ [2 9 8 7 4 3 6 5 1]
+ [7 3 1 8 9 5 4 6 2]
+ [8 7 4 1 2 9 5 3 6]]
+
+Step 5: Check if quad1 still has any dups, if so redo steps 1-4 for quad1 if not move onto quad2 and redo steps 1-4 (skip quads 3 and 6)
+
+Repetition here:
