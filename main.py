@@ -177,6 +177,9 @@ def gen4():
 
                             #leave the for loop as replacment has been completed
                             break
+        
+        #here will be the individual value replacements 
+        
         print(n_count)
         #call recursive backtracking function here to solve the last duplication values
 
@@ -201,6 +204,8 @@ def authenticator(grid):
 
         #checks to see that only one of each possibility exists at a time
         if(set(row[1:]) != {1} or set(col[1:]) != {1} ):
+            #print a statement to help locate error locations
+            print(f"Invalid value found in row or column: {i}")
             #returns a false testing is the test passes
             return False
 
@@ -209,7 +214,9 @@ def authenticator(grid):
             quad_col_offset = 0
             quad_row_offset += 1
 
+        #The logical checking of the quad
         quad_set = set(
+            #turning it into an array of unique values
             np.bincount(
                 grid[
                     quad_row_offset * 3 : (quad_row_offset + 1) * 3,
@@ -220,6 +227,9 @@ def authenticator(grid):
         )
 
         if(quad_set != {1}):
+            #print a statment to help locate which quadrant has an error
+            print(f"Invalid value found in quad: {i+1}") #plus one for quad identity
+            #return a false for when a duplicate is found in a quadrant
             return False
         #quad section here
         #add the extra value for the next itteration
@@ -230,6 +240,18 @@ def authenticator(grid):
 print(__name__)
 
 if __name__ == "__main__":
+    #original
+    # tmp_grid = np.array(
+    #     [[3, 2, 7, 6, 5, 8, 1, 4, 9],
+    #     [9, 1, 3, 4, 6, 7, 8, 2, 5],
+    #     [5, 8, 6, 3, 7, 1, 2, 9, 4],
+    #     [8, 6, 5, 2, 1, 4, 9, 7, 3],
+    #     [7, 4, 9, 5, 8, 2, 3, 1, 6],
+    #     [4, 5, 2, 9, 3, 6, 7, 8, 1],
+    #     [1, 9, 8, 7, 4, 3, 6, 5, 2],
+    #     [2, 3, 1, 8, 9, 5, 4, 6, 7],
+    #     [6, 7, 4, 1, 2, 9, 5, 3, 8]]
+    # )
     tmp_grid = np.array(
         [[3, 2, 7, 6, 5, 8, 1, 4, 9],
         [9, 1, 3, 4, 6, 7, 8, 2, 5],
