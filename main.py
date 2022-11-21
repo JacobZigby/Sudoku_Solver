@@ -4,6 +4,7 @@
 
 # Imports here
 from ast import While
+from os import dup
 from re import template
 import numpy as np
 import random
@@ -196,9 +197,11 @@ def gen4():
 def col_dup_solver(grid, col = 0):
     #check grid to see if it matches the shape requierments (to add when possible)
 
-    #a while loop to traverse the columns of the grid
+    #a while loop to traverse the columns of the grid (this while loop disolves the need for recursion)
+    #change the while loop for the is conditon just below with an else that calls this function but with plus one to col
+    #and if the col value is greater than the grid len then just return the grid
     while(col < len(grid)):
-
+        
         #check for exsistence of duplicates
         n_count = np.bincount(grid[:,col], minlength=10)[1:]
 
@@ -210,22 +213,36 @@ def col_dup_solver(grid, col = 0):
         #create a dup_num var and assign a temp variable
         dup_num = 0
 
-        #create an empty list to hold all missing values
-        missing_nums = []
+        #create an missing var and assign a temp variable
+        missing_num = 0
 
         #check all number counts in the column
         for i in range(len(n_count)):
-            if(n_count[i]>1 and dup_num != 0):
+            if(n_count[i]>1 and dup_num == 0):
                 #assign proper dup number
-                dup_num = i + 1
+                dup_num = i + 1 
 
             #check if value is a missing value from column
-            if(n_count[i] == 0):
-                #assign missing value to list
-                missing_nums.append(i+1)
-                
+            if(n_count[i] == 0 and missing_num == 0):
+                #assign missing value to var
+                missing_num = i + 1
+                #can potentially change this to a list to add randomness to the generations later if I have time
+            
+            #who knows, trying to save some time
+            if(dup_num != 0 and missing_num != 0):
+                break
 
+        print(f"D: {dup_num}    M: {missing_num}")
+        #find the location of the first dup num and the first missing num
+        # going to use numpy.where too get coordinates
 
+        #get the y(row) coordinates for the duplicates using the current column
+        dup_cord = np.where(grid[:,col] == dup_num)
+
+        #get the x(col) coordinates for the missing value using the row of first found duplicate
+        missing_cord = np.where(grid[dup_cord[0][0]] == missing_num)
+        print(grid[dup_cord[0][0],missing_cord[0][0]])
+        break
     return grid
 
 
@@ -308,5 +325,17 @@ if __name__ == "__main__":
     #     [6, 7, 4, 1, 2, 9, 5, 3, 8]]
     # )
     # print(authenticator(tmp_grid))
-    main()
+    tmp_grid = np.array(
+        [[3, 2, 7, 6, 5, 8, 1, 4, 9],
+        [9, 1, 3, 4, 6, 7, 8, 2, 5],
+        [5, 8, 6, 9, 7, 1, 2, 3, 4],
+        [8, 6, 5, 2, 1, 4, 9, 7, 3],
+        [7, 4, 9, 5, 8, 2, 3, 1, 6],
+        [4, 5, 2, 3, 9, 6, 7, 8, 1],
+        [1, 9, 8, 7, 4, 3, 6, 5, 2],
+        [2, 3, 1, 8, 9, 5, 4, 6, 7],
+        [6, 7, 4, 1, 2, 9, 5, 8, 3]]
+    )
+    col_dup_solver(tmp_grid, 4)
+    #main()
     print("Code succesfully exucuted")
