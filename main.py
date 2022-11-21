@@ -132,6 +132,9 @@ def gen4():
     #generate a base board and shuffle all rows at least once
     grid = np.array([random.sample(VALUES, 9) for i in range(len(VALUES))])
 
+    #a column value that will act as a check to start a recursive function
+    col_dup = -1
+
     #step one check if the first column is equal to 45
     #step two check for duplicate values and missing values
     #step three replace a duplicate for a missing (on the same row)
@@ -178,12 +181,53 @@ def gen4():
                             #leave the for loop as replacment has been completed
                             break
         
-        #here will be the individual value replacements 
-        
         print(n_count)
-        #call recursive backtracking function here to solve the last duplication values
+
+        #Activate the condition value and set the column that needs 
+        if(set(n_count[1:]) != {1} and col_dup == -1):
+            col_dup = col
+    
+
+    #call recursive backtracking function here to solve the last duplication values
 
     return grid
+
+#recursive column dup solver
+def col_dup_solver(grid, col = 0):
+    #check grid to see if it matches the shape requierments (to add when possible)
+
+    #a while loop to traverse the columns of the grid
+    while(col < len(grid)):
+
+        #check for exsistence of duplicates
+        n_count = np.bincount(grid[:,col], minlength=10)[1:]
+
+        #if no duplicates exist skip this iteration and go to next column
+        if(set(n_count) == {1}):
+            col += 1
+            continue
+        
+        #create a dup_num var and assign a temp variable
+        dup_num = 0
+
+        #create an empty list to hold all missing values
+        missing_nums = []
+
+        #check all number counts in the column
+        for i in range(len(n_count)):
+            if(n_count[i]>1 and dup_num != 0):
+                #assign proper dup number
+                dup_num = i + 1
+
+            #check if value is a missing value from column
+            if(n_count[i] == 0):
+                #assign missing value to list
+                missing_nums.append(i+1)
+                
+
+
+    return grid
+
 
 def authenticator(grid):
     #the grid should be a 2d array with the shape of 9 by 9
@@ -240,7 +284,18 @@ def authenticator(grid):
 print(__name__)
 
 if __name__ == "__main__":
-    #original
+    # #original
+    # # tmp_grid = np.array(
+    # #     [[3, 2, 7, 6, 5, 8, 1, 4, 9],
+    # #     [9, 1, 3, 4, 6, 7, 8, 2, 5],
+    # #     [5, 8, 6, 3, 7, 1, 2, 9, 4],
+    # #     [8, 6, 5, 2, 1, 4, 9, 7, 3],
+    # #     [7, 4, 9, 5, 8, 2, 3, 1, 6],
+    # #     [4, 5, 2, 9, 3, 6, 7, 8, 1],
+    # #     [1, 9, 8, 7, 4, 3, 6, 5, 2],
+    # #     [2, 3, 1, 8, 9, 5, 4, 6, 7],
+    # #     [6, 7, 4, 1, 2, 9, 5, 3, 8]]
+    # # )
     # tmp_grid = np.array(
     #     [[3, 2, 7, 6, 5, 8, 1, 4, 9],
     #     [9, 1, 3, 4, 6, 7, 8, 2, 5],
@@ -252,17 +307,6 @@ if __name__ == "__main__":
     #     [2, 3, 1, 8, 9, 5, 4, 6, 7],
     #     [6, 7, 4, 1, 2, 9, 5, 3, 8]]
     # )
-    tmp_grid = np.array(
-        [[3, 2, 7, 6, 5, 8, 1, 4, 9],
-        [9, 1, 3, 4, 6, 7, 8, 2, 5],
-        [5, 8, 6, 3, 7, 1, 2, 9, 4],
-        [8, 6, 5, 2, 1, 4, 9, 7, 3],
-        [7, 4, 9, 5, 8, 2, 3, 1, 6],
-        [4, 5, 2, 9, 3, 6, 7, 8, 1],
-        [1, 9, 8, 7, 4, 3, 6, 5, 2],
-        [2, 3, 1, 8, 9, 5, 4, 6, 7],
-        [6, 7, 4, 1, 2, 9, 5, 3, 8]]
-    )
-    print(authenticator(tmp_grid))
-    #main()
+    # print(authenticator(tmp_grid))
+    main()
     print("Code succesfully exucuted")
