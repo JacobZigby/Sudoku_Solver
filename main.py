@@ -20,10 +20,34 @@ def main():
     #option 4: fill in all rows and then shuffle to a solution
     #option 5: do one number type at a time
 
-    print(gen4())
+    print(generator())
+
+def generator():
+    #main suduko generator method, this one should be my most optimized version
+    #will start off by solveing the diagonals first and then generating solutions with backtracking
+    #will redo this method where we solve the sides first and then the diagonal and then use back tracking on the rest
+    
+    #initalize grid
+    grid = np.zeros((9,9), dtype = np.int8)
+
+    #create the values that can be chosen from
+    values = {1,2,3,4,5,6,7,8,9}
+
+    #A temporary placeholder for diagonal quads
+    temp_quad = list(values)
+
+    #create a for loop to populate the diagonals
+    for i in range(3):
+        #the offset to where the quadrants begin
+        offset = i * 3
+
+        #shuffle the last version of temp quad before placing it in the grid
+        np.random.shuffle(temp_quad)
+        grid[offset : 3 + offset, offset : 3 + offset] = np.reshape(temp_quad, (3,3))
+
+    return grid
 
 #for the methods these are temporary names
-
 def gen1():
     #create a set that contains all possible values in a row, col or 3X3 space
     values = {1,2,3,4,5,6,7,8,9}
@@ -123,6 +147,7 @@ def gen1():
 
     return grid
 
+#come back to this:
 def gen4():
     #generate 9 X 9 gride with rows to shuffle
     #cool tool, but not neccesary for what I have in mind
@@ -194,56 +219,78 @@ def gen4():
     return grid
 
 #recursive column dup solver
-def col_dup_solver(grid, col = 0):
+def col_dup_solver(grid, col = 0, last_row = None):
     #check grid to see if it matches the shape requierments (to add when possible)
 
     #a while loop to traverse the columns of the grid (this while loop disolves the need for recursion)
     #change the while loop for the is conditon just below with an else that calls this function but with plus one to col
     #and if the col value is greater than the grid len then just return the grid
-    while(col < len(grid)):
+
+    #if the col has stepped out of bounds return the final grid result
+    if(col == len(grid)):
+        return grid
+
+    #check for exsistence of duplicates
+    n_count = np.bincount(grid[:,col], minlength=10)[1:]
+    
+    #if no duplicates exist check next column
+    if(set(n_count) == {1}):
+        return col_dup_solver(grid, col + 1)
         
-        #check for exsistence of duplicates
-        n_count = np.bincount(grid[:,col], minlength=10)[1:]
+    #create a dup_num var and assign a temp variable
+    dup_num = 0
 
-        #if no duplicates exist skip this iteration and go to next column
-        if(set(n_count) == {1}):
-            col += 1
-            continue
+    #create an missing var and assign a temp variable
+    missing_num = 0
+
+    #check all number counts in the column
+    for i in range(len(n_count)):
+        if(n_count[i]>1 and dup_num == 0):
+            #assign proper dup number
+            dup_num = i + 1 
+
+        #check if value is a missing value from column
+        if(n_count[i] == 0 and missing_num == 0):
+            #assign missing value to var
+            missing_num = i + 1
+            #can potentially change this to a list to add randomness to the generations later if I have time
         
-        #create a dup_num var and assign a temp variable
-        dup_num = 0
+        #who knows, trying to save some time
+        if(dup_num != 0 and missing_num != 0):
+            break
 
-        #create an missing var and assign a temp variable
-        missing_num = 0
+    print(f"D: {dup_num}    M: {missing_num}")
+    #find the location of the first dup num and the first missing num
+    # going to use numpy.where too get coordinates
 
-        #check all number counts in the column
-        for i in range(len(n_count)):
-            if(n_count[i]>1 and dup_num == 0):
-                #assign proper dup number
-                dup_num = i + 1 
+    #get the y(row) coordinates for the duplicates and missing value using the current column
+    dup_cord = np.where(grid[:,col] == dup_num)
+    #check to see this value matches with the last value, if so, use next value
 
-            #check if value is a missing value from column
-            if(n_count[i] == 0 and missing_num == 0):
-                #assign missing value to var
-                missing_num = i + 1
-                #can potentially change this to a list to add randomness to the generations later if I have time
-            
-            #who knows, trying to save some time
-            if(dup_num != 0 and missing_num != 0):
-                break
+    #get the x(col) coordinates for the missing value using the row of first found duplicate
+    missing_cord = np.where(grid[dup_cord[0][0]] == missing_num)
 
-        print(f"D: {dup_num}    M: {missing_num}")
-        #find the location of the first dup num and the first missing num
-        # going to use numpy.where too get coordinates
+    print(grid[dup_cord[0][0],missing_cord[0][0]])
+    print(grid[dup_cord[0][0],col])
+    #do the value transferes here
+    print(f"col: {col}, row: {missing_cord[0][0]}")
+    
+    #change dup for missing
+    grid[dup_cord[0][0],col]= missing_num
 
-        #get the y(row) coordinates for the duplicates using the current column
-        dup_cord = np.where(grid[:,col] == dup_num)
+    #change missing for dup
+    grid[dup_cord[0][0], missing_cord[0][0]] = dup_num
 
-        #get the x(col) coordinates for the missing value using the row of first found duplicate
-        missing_cord = np.where(grid[dup_cord[0][0]] == missing_num)
-        print(grid[dup_cord[0][0],missing_cord[0][0]])
-        break
-    return grid
+
+    print(grid)
+    #after the transfere check the column to see if any duplicates exist if they do, call the function from that column
+    #if none found call the funciton on the same col
+    #check if new column has any duplicates
+
+    if(missing_cord[0][0]< col and set(np.bincount(grid[:,missing_cord[0][0]], minlength=10)[1:]) != {1}):
+        return col_dup_solver(grid,missing_cord[0][0],dup_cord[0][0])
+
+    return col_dup_solver(grid, col)
 
 
 def authenticator(grid):
@@ -325,17 +372,17 @@ if __name__ == "__main__":
     #     [6, 7, 4, 1, 2, 9, 5, 3, 8]]
     # )
     # print(authenticator(tmp_grid))
-    tmp_grid = np.array(
-        [[3, 2, 7, 6, 5, 8, 1, 4, 9],
-        [9, 1, 3, 4, 6, 7, 8, 2, 5],
-        [5, 8, 6, 9, 7, 1, 2, 3, 4],
-        [8, 6, 5, 2, 1, 4, 9, 7, 3],
-        [7, 4, 9, 5, 8, 2, 3, 1, 6],
-        [4, 5, 2, 3, 9, 6, 7, 8, 1],
-        [1, 9, 8, 7, 4, 3, 6, 5, 2],
-        [2, 3, 1, 8, 9, 5, 4, 6, 7],
-        [6, 7, 4, 1, 2, 9, 5, 8, 3]]
-    )
-    col_dup_solver(tmp_grid, 4)
-    #main()
+    # tmp_grid = np.array(
+    #     [[3, 2, 7, 6, 5, 8, 1, 4, 9],
+    #     [9, 1, 3, 4, 6, 7, 8, 2, 5],
+    #     [5, 8, 6, 9, 7, 1, 2, 3, 4],
+    #     [8, 6, 5, 2, 1, 4, 9, 7, 3],
+    #     [7, 4, 9, 5, 8, 2, 3, 1, 6],
+    #     [4, 5, 2, 3, 9, 6, 7, 8, 1],
+    #     [1, 9, 8, 7, 4, 3, 6, 5, 2],
+    #     [2, 3, 1, 8, 9, 5, 4, 6, 7],
+    #     [6, 7, 4, 1, 2, 9, 5, 8, 3]]
+    # )
+    # col_dup_solver(tmp_grid, 4)
+    main()
     print("Code succesfully exucuted")
