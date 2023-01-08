@@ -44,8 +44,9 @@ def generator():
         np.random.shuffle(temp_quad)
         grid[offset : 3 + offset, offset : 3 + offset] = np.reshape(temp_quad, (3,3))
 
+    #call the filler function
+    fill_grid(grid,0,3)
     
-
     return grid
 
 #Create a recursive backtracking method to fill in the grid
@@ -60,6 +61,22 @@ def fill_grid(grid, row, col):
             return True
 
     #skip already filled in squares
+    if grid[row, col] != 0:
+        return fill_grid(grid, row, col + 1)
+
+    #put all available values into a list to chose for
+    bag_of_values = avaliable_values(grid, row, col)
+    np.random.shuffle(bag_of_values)
+    #fill in missing value using only valid values
+    for value in bag_of_values:
+        grid[row,col] = value
+        if fill_grid(grid, row, col+1):
+            return True
+        #if current iterations did not work, reset value
+        grid[row, col] = 0
+    #return false as no value was found
+    return False
+
 
 #check for all avaliable values for a location
 def avaliable_values(grid, row, col):
@@ -77,7 +94,7 @@ def avaliable_values(grid, row, col):
     #create a set to easily remo
     quad_set = set(grid[row_quad*3:(row_quad+1)*3, col_quad*3:(col_quad+1)*3].flatten())
     values = values - quad_set
-    
+
     return list(values)
 
 
