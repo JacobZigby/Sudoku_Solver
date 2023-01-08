@@ -48,8 +48,41 @@ def generator():
 
     return grid
 
+#Create a recursive backtracking method to fill in the grid
+def fill_grid(grid, row, col):
+    #base case/ending scenario
+    if col == 9:
+        #end of column has been reached, readjusting values
+        col = 0
+        row += 1
+        if row == 9:
+            #all squares have been filled, thus end the cycle
+            return True
+
+    #skip already filled in squares
+
+#check for all avaliable values for a location
+def avaliable_values(grid, row, col):
+    #Default values
+    values = {1,2,3,4,5,6,7,8,9}
+    #remove values found on the selected row
+    values = values - set(grid[row])
+    #remove values found on selected column
+    values = values - set(grid[:,col])
+
+    #identify the quad
+    col_quad = col // 3
+    row_quad = row // 3
+    
+    #create a set to easily remo
+    quad_set = set(grid[row_quad*3:(row_quad+1)*3, col_quad*3:(col_quad+1)*3].flatten())
+    values = values - quad_set
+    
+    return list(values)
+
+
 #Check to see if a hypothetical value can fit into the grid at selected location
-def isValid(grid:np.ndarray, row, col, value):
+def is_valid(grid:np.ndarray, row, col, value):
     #check to see if new value already exists in row
     if value in grid[row]:
         #if value exists return false
@@ -76,7 +109,6 @@ def isValid(grid:np.ndarray, row, col, value):
     
     #if none of the conditions passed, return true as value does not exist yet
     return True
-
 
 #for the methods these are temporary names, will also come back to see if I can better optomize some of these
 def gen1():
