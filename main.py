@@ -19,13 +19,12 @@ def main():
     #option 3: fill in the diagonal squares first and fill in the rest after
     #option 4: fill in all rows and then shuffle to a solution
     #option 5: do one number type at a time
-
-    print(generator())
+    grid = generator()
+    print(grid)
 
 def generator():
     #main suduko generator method, this one should be my most optimized version
     #will start off by solveing the diagonals first and then generating solutions with backtracking
-    #will redo this method where we solve the sides first and then the diagonal and then use back tracking on the rest
     
     #initalize grid
     grid = np.zeros((9,9), dtype = np.int8)
@@ -45,9 +44,41 @@ def generator():
         np.random.shuffle(temp_quad)
         grid[offset : 3 + offset, offset : 3 + offset] = np.reshape(temp_quad, (3,3))
 
+    
+
     return grid
 
-#for the methods these are temporary names
+#Check to see if a hypothetical value can fit into the grid at selected location
+def isValid(grid:np.ndarray, row, col, value):
+    #check to see if new value already exists in row
+    if value in grid[row]:
+        #if value exists return false
+        print(f"Value {value} exists on row: {row}")
+        return False
+    
+    #check to see if new value already exists in col
+    if value in grid[:,col]:
+        #if value exists return false
+        print(f"Value {value} exists on col: {col}")
+        return False
+
+    #identify current quad by getting the floor division of current coordinates
+    col_quad = col // 3
+    row_quad = row // 3
+    
+    #create a list to easily check if value exists inside
+    quad_list = grid[row_quad*3:(row_quad+1)*3, col_quad*3:(col_quad+1)*3].flatten()
+
+    #check if the value exists inside the quad
+    if value in quad_list:
+        print(f"Value {value} exists in quad {(col_quad,row_quad)}")
+        return False
+    
+    #if none of the conditions passed, return true as value does not exist yet
+    return True
+
+
+#for the methods these are temporary names, will also come back to see if I can better optomize some of these
 def gen1():
     #create a set that contains all possible values in a row, col or 3X3 space
     values = {1,2,3,4,5,6,7,8,9}
