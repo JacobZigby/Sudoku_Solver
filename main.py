@@ -20,6 +20,7 @@ def main():
     #option 4: fill in all rows and then shuffle to a solution
     #option 5: do one number type at a time
     grid = generator()
+    print(random_removal(grid))
     print(grid)
 
 def generator():
@@ -97,7 +98,6 @@ def avaliable_values(grid, row, col):
 
     return list(values)
 
-
 #Check to see if a hypothetical value can fit into the grid at selected location
 def is_valid(grid:np.ndarray, row, col, value):
     #check to see if new value already exists in row
@@ -126,6 +126,15 @@ def is_valid(grid:np.ndarray, row, col, value):
     
     #if none of the conditions passed, return true as value does not exist yet
     return True
+
+#method to remove values from valid sudoku grids, returns a new grid
+def random_removal(grid):
+    #create a copy of the grid as to not overwrite the original
+    new_grid = grid.copy()
+    
+    return new_grid
+
+#create a method that solves the sudoku the same way a player does and gives a grading scheme to it
 
 #for the methods these are temporary names, will also come back to see if I can better optomize some of these
 def gen1():
