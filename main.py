@@ -128,10 +128,20 @@ def is_valid(grid:np.ndarray, row, col, value):
     return True
 
 #method to remove values from valid sudoku grids, returns a new grid
-def random_removal(grid):
+def random_removal(grid, remove_num = 0):
     #create a copy of the grid as to not overwrite the original
     new_grid = grid.copy()
     
+    #total number of squares in a grid
+    TOTAL_SQUARES = 9 * 9
+
+    #Check to see if remove_num contains a valid number, if not randomly assign one
+    if(not remove_num or remove_num > TOTAL_SQUARES-17):
+        #through a quick search we see that the minumue number of given squares that are needed to solve a sudoku is 17
+        remove_num = np.random.randint(20,TOTAL_SQUARES-16)
+
+    print(remove_num)
+
     return new_grid
 
 #create a method that solves the sudoku the same way a player does and gives a grading scheme to it
