@@ -20,7 +20,7 @@ def main():
     #option 4: fill in all rows and then shuffle to a solution
     #option 5: do one number type at a time
     grid = generator()
-    print(random_removal(grid))
+    print(random_removal(grid), end="\n\n")
     print(grid)
 
 def generator():
@@ -140,9 +140,13 @@ def random_removal(grid, remove_num = 0):
         #through a quick search we see that the minumue number of given squares that are needed to solve a sudoku is 17
         remove_num = np.random.randint(20,TOTAL_SQUARES-16)
 
-    print(remove_num)
+    #create a 2d array to multiply ontop of the grid
+    mask_array = ([0] * remove_num) + ([1] * (TOTAL_SQUARES-remove_num))
 
-    return new_grid
+    np.random.shuffle(mask_array)
+    mask_array = np.resize(mask_array, (9,9))
+
+    return new_grid * mask_array
 
 #create a method that solves the sudoku the same way a player does and gives a grading scheme to it
 
