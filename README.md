@@ -21,3 +21,7 @@ Creating the fundementals
 2. allow users to play any sudoku they find my taking a picture with thier mobile device and having it transfered
 3. implement a hint method
 4. Create a difficulty predictor
+
+### NEWS
+
+1. Update, finished collecting all the data (for now). Now I plan to focus on cleaning said data, by checking for duplicates and potentially seeing how many of the problems have more than one solution. (might also catagorize them in terms of how many values are missing) 
