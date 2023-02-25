@@ -4,10 +4,14 @@ import numpy as np
 #the main function
 def main():
     PATH = "Data"
-    
-    for i in range(100):
-        save_batch(PATH, f"Batch_{i}")
-        print(f"Batch_{i} completed")
+    ITTER_NAME = "Batch_"
+    # for loop to save the batches
+    # for i in range(100, 1000):
+    #     save_batch(PATH, f"Batch_{i}")
+    #     print(f"Batch_{i} completed")
+
+    #call the combination method
+    combine_files(PATH, ITTER_NAME, 1000)
 
 # This gathering of data will be very plain and simple just to do some first level testing
 # I will later return to optimize in a way to make sure the results are all unique
@@ -35,7 +39,22 @@ def save_batch(path, itter_name, batch_size = 1000, times_repeated = 10):
     np.save(path+f"\\X\\{itter_name}", X)
     np.save(path+f"\\Y\\{itter_name}", Y)
 
+# This method will combine all batches into one file
+# I could program it using OS to just check for all the files and loop like that, but honestly I made it, and I know how many there are so let's not waste our time
+def combine_files(path, itter_name, num_batches: int) -> None:
+    #initalize the lists
+    X = []
+    Y = []
+    #extraction loop
+    for i in range(num_batches):
+        X.extend(np.load(path+f"\\X\\{itter_name}{i}.npy"))
+        Y.extend(np.load(path+f"\\Y\\{itter_name}{i}.npy"))
+        print(f"{itter_name}{i} done loading!")
 
+    #save a rough final file (will clean else where)
+    np.save(path+f"\\X\\All_Data", X)
+    np.save(path+f"\\Y\\All_Data", Y)
+    print("Final save complete")
 
 
 #will keep this here for references
