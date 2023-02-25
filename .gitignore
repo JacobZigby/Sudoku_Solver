@@ -1,3 +1,5 @@
 .env
 #ignore the enviroment
 sudoku_env
+#ignore the data directory
+*.npy
