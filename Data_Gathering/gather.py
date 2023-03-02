@@ -2,6 +2,7 @@ from Grid import Grid
 import numpy as np
 
 #the main function
+#primary focus to collect and clean data
 def main():
     PATH = "Data"
     ITTER_NAME = "Batch_"
@@ -11,7 +12,14 @@ def main():
     #     print(f"Batch_{i} completed")
 
     #call the combination method
-    combine_files(PATH, ITTER_NAME, 1000)
+    #combine_files(PATH, ITTER_NAME, 1000)
+    print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
+    temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
+    temp1.sort()
+    print(temp1)
+    temp3 = list(set(temp1))
+    temp3.sort()
+    print(temp3)
 
 # This gathering of data will be very plain and simple just to do some first level testing
 # I will later return to optimize in a way to make sure the results are all unique
@@ -55,6 +63,27 @@ def combine_files(path, itter_name, num_batches: int) -> None:
     np.save(path+f"\\X\\All_Data", X)
     np.save(path+f"\\Y\\All_Data", Y)
     print("Final save complete")
+
+#removes duplicates from list1 and removes the appropriate one from list2
+def remove_dup(list1, list2):
+    #make sure that both list are the same length
+    if len(list1) != len(list2):
+        raise ValueError(f"len of list1 ({len(list1)}) and list2 ({len(list2)}) are not equivalent")
+    
+    #iterate through the list from the end to pop out duplicates without issue
+    for iter in range(len(list1)-1, 0, -1):
+        #only grab the values from the list as we only need it for comparions
+        for value in list1[iter-1::-1]:
+            
+            if value == list1[iter]:
+                #pop out the duplicates found in list one and the respective index from list2
+                list1.pop(iter)
+                list2.pop(iter)
+                #break out as we just removed the value we were using
+                break
+    
+    #return as a tuple that we'll seprate upon return outside
+    return list1,list2
 
 
 #will keep this here for references
