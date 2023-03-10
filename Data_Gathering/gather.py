@@ -21,9 +21,14 @@ def main():
 
     print(len(X_all))
 
-    temp_X_all, temp_Y_all = remove_dup(Y_all, X_all)
+    Cleaned_X_all, Cleaned_Y_all = remove_dup(X_all, Y_all)
 
-    print(len(temp_X_all))
+    #to check if any changes happened
+    print(f"Changes found: {len(X_all) == len(Cleaned_X_all)}")
+    print(len(Cleaned_X_all))
+    
+    np.save(PATH+f"\\X\\New_All_Data", Cleaned_X_all)
+    np.save(PATH+f"\\Y\\New_All_Data", Cleaned_Y_all)
 
 # This gathering of data will be very plain and simple just to do some first level testing
 # I will later return to optimize in a way to make sure the results are all unique
