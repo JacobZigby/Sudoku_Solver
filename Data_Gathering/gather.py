@@ -13,13 +13,17 @@ def main():
 
     #call the combination method
     #combine_files(PATH, ITTER_NAME, 1000)
-    print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
-    temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
-    temp1.sort()
-    print(temp1)
-    temp3 = list(set(temp1))
-    temp3.sort()
-    print(temp3)
+    # print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
+    # temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
+
+    X_all = np.load(PATH+"\\X\\All_Data.npy")
+    Y_all = np.load(PATH+"\\Y\\All_Data.npy")
+
+    print(len(X_all))
+
+    temp_X_all, temp_Y_all = remove_dup(Y_all, X_all)
+
+    print(len(temp_X_all))
 
 # This gathering of data will be very plain and simple just to do some first level testing
 # I will later return to optimize in a way to make sure the results are all unique
@@ -64,24 +68,41 @@ def combine_files(path, itter_name, num_batches: int) -> None:
     np.save(path+f"\\Y\\All_Data", Y)
     print("Final save complete")
 
+### DOESN'T WORK WITH NP ARRAYS, CONCLUSION CREATE A LIST OF ALL INDEXES THAT NEED TO BE REMOVED
+
 #removes duplicates from list1 and removes the appropriate one from list2
-def remove_dup(list1, list2):
+#will only work for girds
+def remove_dup(list1:np.ndarray, list2:np.ndarray):
     #make sure that both list are the same length
     if len(list1) != len(list2):
         raise ValueError(f"len of list1 ({len(list1)}) and list2 ({len(list2)}) are not equivalent")
     
-    #iterate through the list from the end to pop out duplicates without issue
+    #create a list that will hold all the indexs to remove
+    to_remove = []
+    #create a masking layer
+    mask = np.ones(len(list1),np.bool8)
+
+    #original design was to remove as we go, so I started backwards to avoid shape issues, but now we remove at the end
     for iter in range(len(list1)-1, 0, -1):
-        #only grab the values from the list as we only need it for comparions
+        #only take the grids from the list as we only need it for comparions
         for value in list1[iter-1::-1]:
-            
-            if value == list1[iter]:
-                #pop out the duplicates found in list one and the respective index from list2
-                list1.pop(iter)
-                list2.pop(iter)
-                #break out as we just removed the value we were using
+            #check to make sure all values are true in the comparison (can also use np.array_equal(A,B))
+            if (value == list1[iter]).all():
+                print("activated")
+                #add original index to the removal list
+                to_remove.append(iter)
+                #break out as that's all we need for this iteration
                 break
+        #add a print statment to see progress
+        print(f"iter: {iter} completed!")
+        break
     
+    #update mask layer with values to be removed
+    mask[to_remove] = False
+    #remove values here
+    list1 = list1[mask]
+    list2 = list2[mask]
+
     #return as a tuple that we'll seprate upon return outside
     return list1,list2
 
