@@ -83,19 +83,19 @@ def remove_dup(list1:np.ndarray, list2:np.ndarray):
     mask = np.ones(len(list1),np.bool8)
 
     #original design was to remove as we go, so I started backwards to avoid shape issues, but now we remove at the end
-    for iter in range(len(list1)-1, 0, -1):
+    for iter1 in range(len(list1)-1, 0, -1):
         #only take the grids from the list as we only need it for comparions
-        for value in list1[iter-1::-1]:
+        for iter2 in range(iter1-1,-1,-1):
             #check to make sure all values are true in the comparison (can also use np.array_equal(A,B))
-            if (value == list1[iter]).all():
+            #also check to make sure that botho grid in the next list are also not the same
+            if ((list1[iter2] == list1[iter1]).all() and (list2[iter2] == list2[iter1]).all()):
                 print("activated")
                 #add original index to the removal list
-                to_remove.append(iter)
+                to_remove.append(iter1)
                 #break out as that's all we need for this iteration
                 break
         #add a print statment to see progress
-        print(f"iter: {iter} completed!")
-        break
+        print(f"iter: {iter1} completed!")
     
     #update mask layer with values to be removed
     mask[to_remove] = False
