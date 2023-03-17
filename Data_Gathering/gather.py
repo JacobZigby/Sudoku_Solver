@@ -1,5 +1,6 @@
 from Grid import Grid
 import numpy as np
+from hashlib import sha256
 
 #the main function
 #primary focus to collect and clean data
@@ -16,19 +17,31 @@ def main():
     # print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
     # temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
 
+    # Code to clean the data 
     X_all = np.load(PATH+"\\X\\All_Data.npy")
     Y_all = np.load(PATH+"\\Y\\All_Data.npy")
-
-    print(len(X_all))
-
-    Cleaned_X_all, Cleaned_Y_all = remove_dup(X_all, Y_all)
-
-    #to check if any changes happened
-    print(f"Changes found: {len(X_all) == len(Cleaned_X_all)}")
-    print(len(Cleaned_X_all))
+    hash_list = [sha256(X_all[i].tobytes() + Y_all[i].tobytes()).hexdigest() for i in range(len(X_all))]
+    indexes_remove = remove_dup_hash(hash_list)
+    #create the mask values    
+    mask = np.ones(len(X_all),np.bool8)
     
-    np.save(PATH+f"\\X\\New_All_Data", Cleaned_X_all)
-    np.save(PATH+f"\\Y\\New_All_Data", Cleaned_Y_all)
+    print(f"Found # of dups: {len(indexes_remove)}")
+    # Checking if any dups are found
+    if len(indexes_remove):
+        #update the mask values
+        mask[indexes_remove] = False
+    
+    #save the cleaned formates here here
+    np.save(PATH+"\\De_Dup\\X\\X", X_all[mask])
+    np.save(PATH+"\\De_Dup\\Y\\Y", Y_all[mask])
+
+
+
+    # print(f"Changes found: {len(X_all) == len(Cleaned_X_all)}")
+    # print(len(Cleaned_X_all))
+    
+    # np.save(PATH+f"\\X\\New_All_Data", Cleaned_X_all)
+    # np.save(PATH+f"\\Y\\New_All_Data", Cleaned_Y_all)
 
 # This gathering of data will be very plain and simple just to do some first level testing
 # I will later return to optimize in a way to make sure the results are all unique
@@ -110,6 +123,25 @@ def remove_dup(list1:np.ndarray, list2:np.ndarray):
 
     #return as a tuple that we'll seprate upon return outside
     return list1,list2
+
+#same function as the remove dup method but will run O(n)
+def remove_dup_hash(hash_list: list):
+    #create an empty dict
+    temp_dict = {}
+    #create list to return indexes to remove
+    to_remove = []
+
+    #go through the list
+    for i in range(len(hash_list)):
+        #doing some dictionary magic here
+        if hash_list[i] not in temp_dict.keys():
+            temp_dict[hash_list[i]] = 1
+        #if not found, add current index to list
+        else:
+            to_remove.append(i)
+
+    #return list of indexs to remove
+    return to_remove
 
 
 #will keep this here for references
