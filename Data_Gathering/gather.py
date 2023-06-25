@@ -5,27 +5,30 @@ from hashlib import sha256
 #the main function
 #primary focus to collect and clean data
 def main():
+    #UNCOMMENT SECTIONS THAT ARE NEEDED, IF FIRST TIME RUNNING UNCOMMENT EVERYTHING
     PATH = "Data"
     ITTER_NAME = "Batch_"
     # for loop to save the batches
-    # for i in range(100, 1000):
-    #     save_batch(PATH, f"Batch_{i}")
-    #     print(f"Batch_{i} completed")
+    for i in range(100, 1000):
+        save_batch(PATH, f"Batch_{i}")
+        print(f"Batch_{i} completed")
 
-    #call the combination method
-    #combine_files(PATH, ITTER_NAME, 1000)
-    # print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
-    # temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
+    # call the combination method
+    combine_files(PATH, ITTER_NAME, 1000)
+    
+    #print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
+    #temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
 
     # Code to clean the data 
     X_all = np.load(PATH+"\\X\\All_Data.npy")
     Y_all = np.load(PATH+"\\Y\\All_Data.npy")
+    #combine both X and Y's to create unique problem/solution combos into hashes
     hash_list = [sha256(X_all[i].tobytes() + Y_all[i].tobytes()).hexdigest() for i in range(len(X_all))]
     indexes_remove = remove_dup_hash(hash_list)
     #create the mask values    
     mask = np.ones(len(X_all),np.bool8)
     
-    print(f"Found # of dups: {len(indexes_remove)}")
+    # print(f"Found # of dups: {len(indexes_remove)}")
     # Checking if any dups are found
     if len(indexes_remove):
         #update the mask values
@@ -35,16 +38,7 @@ def main():
     np.save(PATH+"\\De_Dup\\X\\X", X_all[mask])
     np.save(PATH+"\\De_Dup\\Y\\Y", Y_all[mask])
 
-
-
-    # print(f"Changes found: {len(X_all) == len(Cleaned_X_all)}")
-    # print(len(Cleaned_X_all))
-    
-    # np.save(PATH+f"\\X\\New_All_Data", Cleaned_X_all)
-    # np.save(PATH+f"\\Y\\New_All_Data", Cleaned_Y_all)
-
 # This gathering of data will be very plain and simple just to do some first level testing
-# I will later return to optimize in a way to make sure the results are all unique
 #I'll do this either by looking for a method to determin how a grid is unique or just pass the solver through it ten times and seeing if all ten results are identical
 def save_batch(path, itter_name, batch_size = 1000, times_repeated = 10):
     #create a x and y list to be saved
@@ -89,7 +83,7 @@ def combine_files(path, itter_name, num_batches: int) -> None:
 ### DOESN'T WORK WITH NP ARRAYS, CONCLUSION CREATE A LIST OF ALL INDEXES THAT NEED TO BE REMOVED
 
 #removes duplicates from list1 and removes the appropriate one from list2
-#will only work for girds
+#will only work for girds (Can be removed safely)
 def remove_dup(list1:np.ndarray, list2:np.ndarray):
     #make sure that both list are the same length
     if len(list1) != len(list2):
