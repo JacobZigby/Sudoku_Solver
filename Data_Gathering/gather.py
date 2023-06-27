@@ -8,13 +8,18 @@ def main():
     #UNCOMMENT SECTIONS THAT ARE NEEDED, IF FIRST TIME RUNNING UNCOMMENT EVERYTHING
     PATH = "Data"
     ITTER_NAME = "Batch_"
+    #Change Num_Batches value as required (See formula in how to use)
+    NUM_BATCHES = 100
+
     # for loop to save the batches
-    for i in range(100, 1000):
+    for i in range(NUM_BATCHES):
+        #Uncomment below and change values as desired, Don't forget to comment line below if personalizing
+        #save_batch(PATH, f"Batch_{i}", batch_size=100, times_repeated=2) #Batch size = total entries per file, times repeated = times same solution is used
         save_batch(PATH, f"Batch_{i}")
         print(f"Batch_{i} completed")
 
     # call the combination method
-    combine_files(PATH, ITTER_NAME, 1000)
+    combine_files(PATH, ITTER_NAME, NUM_BATCHES)
     
     #print(remove_dup([2,3,4,5,2,1,6,7,5],[1,2,3,4,5,6,7,8,9]))
     #temp1, temp2 = remove_dup([6,9,4,2,0,6,9,5,8,7,6,9,6,1,3,6,9,4,0],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
@@ -26,7 +31,7 @@ def main():
     hash_list = [sha256(X_all[i].tobytes() + Y_all[i].tobytes()).hexdigest() for i in range(len(X_all))]
     indexes_remove = remove_dup_hash(hash_list)
     #create the mask values    
-    mask = np.ones(len(X_all),np.bool8)
+    mask = np.ones(len(X_all),np.bool_)
     
     # print(f"Found # of dups: {len(indexes_remove)}")
     # Checking if any dups are found
@@ -40,7 +45,7 @@ def main():
 
 # This gathering of data will be very plain and simple just to do some first level testing
 #I'll do this either by looking for a method to determin how a grid is unique or just pass the solver through it ten times and seeing if all ten results are identical
-def save_batch(path, itter_name, batch_size = 1000, times_repeated = 10):
+def save_batch(path, itter_name, batch_size = 1000, times_repeated = 10) -> None:
     #create a x and y list to be saved
     X = []
     Y = []
