@@ -3,6 +3,7 @@ A project whose aim is to determine the efficiency between a model that solves s
 <br>
 Read [HowToUse](HowToUse.md) if you wish to create your own model and dataset
 <br>
+Will release model once completed
 ### TO DO
 
 Creating the fundementals
