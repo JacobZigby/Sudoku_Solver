@@ -9,12 +9,12 @@ def main():
     PATH = "Data"
     ITTER_NAME = "Batch_"
     #Change Num_Batches value as required (See formula in how to use)
-    NUM_BATCHES = 1000
+    NUM_BATCHES = 100
 
     # for loop to save the batches
     for i in range(NUM_BATCHES):
         #Uncomment below and change values as desired, Don't forget to comment line 18 if using line 17
-        #save_batch(PATH, f"Batch_{i}", batch_size=100, times_repeated=2) #Batch size = total entries per file, times repeated = times same solution is used
+        #save_batch(PATH, f"Batch_{i}", batch_size=100, times_repeated=1) #Batch size = total entries per file, times repeated = times same solution is used
         save_batch(PATH, f"Batch_{i}")
         print(f"Batch_{i} completed")
 
