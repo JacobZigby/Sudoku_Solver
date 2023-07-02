@@ -7,6 +7,7 @@ Note: you will need to have some version of python installed to run this
 python -m venv sudoku_env
 ~~~
 Note: you can navigate your way through directories using the cd command [Examples](https://www.lifewire.com/change-directories-in-command-prompt-5185508#:~:text=In%20the%20command%20prompt%20window%2C%20type%20cd%20followed%20by%20the,the%20one%20you're%20in.&text=If%20you%20want%20to%20go,back%20to%20the%20original%20option.) <br>
+
 2. <i><b>(This step is not necessary but suggested)</b></i> Activate the environment by running this snippet in the console:
 ~~~
 sudoku_env\Scripts\activate
