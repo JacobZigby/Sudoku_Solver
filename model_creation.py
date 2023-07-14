@@ -2,11 +2,11 @@
 #Will start with a keras convid2d model and attempt to make a model using pytorch later
 
 #Imports here
+import random
 import tensorflow as tf
 import numpy as np
 
 def main():
-    #this is all just a test for now
     #Declare constants
     #Path to cleaned data
     DATA_PATH = "Data_Gathering\\Data\\De_Dup\\"
@@ -16,35 +16,39 @@ def main():
     X = np.load(f"{DATA_PATH}X\\X.npy")
     Y = np.load(f"{DATA_PATH}Y\\Y.npy")
 
-    #basic split of 60/20/20
+    #basic split of 80/10/10
     temp = len(X)
-    print(temp)
-    print(f"{temp*0.6}: 60%")
-    print(f"{temp*0.2}: 20%")
-    print(f"{temp*0.8}: 80%")
-    print(f"{(temp*0.6)+(temp*0.2)}: 60% + 20%")
-    print()
-    print(f"{temp//5}: 20%")
-    print(f"{temp//5*3}: 60%")
-    print(f"{temp//5*4}: 80%")
-    print()
     #this one is the formula, get the 1% value, then multiply to the percentage you want
     print(f"{temp//100*80}: 80%")
 
+    print("Testing X and Y value type:")
+    print(type(X[0]))
+    print(Y[0])
 
-
-#function to load data
-def load_data(path):
-    pass
+    print("Test of data_split method")
+    data_split(X,Y, shuffle=True)
 
 #function to split data into (train/test/validation) sets
-def data_split(x, y, percentages = (60,20,20)):
-    #percentage is a tuple and should equal 100 in the end, create validator to make sure this is true
+def data_split(x, y, percentages = (80,10,10), shuffle = False):
+    #Function will return a nested tuple where the first layer will be for x, y and the next for train,test,validate
     #Check if percentage tuple adds up too 100
     if(sum(list(percentages)) != 100):
-        #raise an error here
-        print("ERROR")
-    pass
+        raise ValueError(f"Percentage tuple {percentages} does not add up too 100")
+    
+    #shuffle here if true
+    if shuffle:
+        #zip x and y values and do a basic
+        temp = list(zip(x,y))
+        random.shuffle(temp)
+        #unzip and reassing back to x and y
+        x,y = zip(*temp)
+
+        print("Test to see how the shuffle effects the values")
+        print(type(x[0]))
+        print(y[0])
+
+
+
 
 if __name__ == "__main__":
     print("Code started")
