@@ -4,6 +4,7 @@
 #Imports here
 import random
 import tensorflow as tf
+from tensorflow import keras
 import numpy as np
 
 def main():
@@ -15,6 +16,7 @@ def main():
     print("Loading data...")
     X = np.load(f"{DATA_PATH}X\\X.npy")
     Y = np.load(f"{DATA_PATH}Y\\Y.npy")
+    print("Data loaded")
 
     #check to see that both files are of the same size
     if len(X) != len(Y):
@@ -23,11 +25,18 @@ def main():
     
     #in each tuple indexs; 0 = train, 1 = test, 2 = validation
     xs,ys= data_split(X,Y, shuffle=True)
-    print(xs[1])
+
+    test = build_model(xs,ys)
+
+    print("Printing test")
+    print(test.predict(xs[1][0]))
+    print(ys[1][0])
+    print("test?")
+
 
 
 #function to split data into (train/test/validation) sets
-def data_split(x, y, percentages = (80,10), shuffle = False):
+def data_split(x, y, percentages = (80,10,10), shuffle = False):
     #Function will return a nested tuple where the first layer will be for x, y and the next for train,test,validate
 
     if len(percentages) not in [3,2]:
@@ -54,7 +63,19 @@ def data_split(x, y, percentages = (80,10), shuffle = False):
     #making each split here, and storing into tuples
     return (x[:q1],x[q1:q2],x[q2:]),(y[:q1],y[q1:q2],y[q2:])
 
+#we'll start with a baisc model and build up the function in time
+def build_model(data, target):
+    #remember to put in an input shape arg
+    #build model here
+    model = keras.models.Sequential([
+        keras.layers.Conv2D(81,3)
+    ])
+    
+    model.compile(optimizer=keras.optimizers.Adam(1e-4), loss=keras.losses.MeanSquaredError(), metrics=["mse"])
 
+    model.fit(data[0],target[0],validation_data=(data[2],target[2]),epochs=10)
+
+    return model
 
 if __name__ == "__main__":
     print("Code started")
