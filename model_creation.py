@@ -18,26 +18,21 @@ def main():
 
     #check to see that both files are of the same size
     if len(X) != len(Y):
+        #if this error is raised, I suggest reviewing the settings for the gather script and rerunning it
         raise ValueError(f"X ({len(X)}) and Y ({len(Y)}) are of unequal length")
     
-    #basic split of 80/10/10
-    temp = len(X)
-    #this one is the formula, get the 1% value, then multiply to the percentage you want
-    print(f"{temp//100*80}: 80%")
-
-    print("Testing X and Y values:")
-    print(X[0])
-    print(Y[0])
-
-    print("Test of data_split method")
+    #in each tuple indexs; 0 = train, 1 = test, 2 = validation
     xs,ys= data_split(X,Y, shuffle=True)
-    print(xs[0][0])
-    print(ys[0][0])
+    print(xs[1])
 
-#come back to fix percentages later
+
 #function to split data into (train/test/validation) sets
-def data_split(x, y, percentages = (80,10,10), shuffle = False):
+def data_split(x, y, percentages = (80,10), shuffle = False):
     #Function will return a nested tuple where the first layer will be for x, y and the next for train,test,validate
+
+    if len(percentages) not in [3,2]:
+        #might be using the wrong exception type here
+        raise IndexError(f"Expected 3 values from percentages arg, Received: {len(percentages)}")
     #Check if percentage tuple adds up too 100
     if(sum(list(percentages)) != 100):
         raise ValueError(f"Percentage tuple {percentages} does not add up too 100")
@@ -52,6 +47,7 @@ def data_split(x, y, percentages = (80,10,10), shuffle = False):
 
     #get index location for each split
     data_size = len(x)
+    #get the 1% value, then multiply to the percentages demanded 
     q1 = data_size//100*percentages[0]
     q2 = (data_size//100*percentages[1]) +  q1
 
